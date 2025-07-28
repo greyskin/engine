@@ -62,6 +62,11 @@ module Locomotive
 
     ## methods ##
 
+    # Allow HTML rendering in content_type description
+    def html_safe_description
+      self.description.to_s.html_safe
+    end
+    
     # Order the list of entries, paginate it if requested
     # and filter it.
     #
