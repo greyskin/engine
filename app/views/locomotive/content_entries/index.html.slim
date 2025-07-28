@@ -1,5 +1,5 @@
 - title t('.title', type: @content_type.name.capitalize)
-- help @content_type.description
+- help @content_type.html_safe_description
 
 - content_for :actions do
   - if @content_type.localized?
