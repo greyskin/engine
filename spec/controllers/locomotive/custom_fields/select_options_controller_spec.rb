@@ -62,4 +62,49 @@ describe Locomotive::CustomFields::SelectOptionsController do
     end
 
   end
+
+  describe "#GET edit" do
+
+    subject { get :edit, params: { site_handle: site, slug: content_type.slug, name: field.name } }
+
+    context 'options_editable is true (default)' do
+      it { is_expected.to be_successful }
+    end
+
+    context 'options_editable is false' do
+      before { field.update_attributes(options_editable: false) }
+      it { is_expected.to have_http_status(:forbidden) }
+    end
+
+  end
+
+  describe "#PUT update, options_editable guard" do
+
+    let(:attributes) { { site_handle: site, slug: content_type.slug, name: field.name, content_locale: :en, select_options: [{ name: 'Development' }] } }
+
+    subject { put :update, params: attributes }
+
+    before { field.update_attributes(options_editable: false) }
+
+    it { is_expected.to have_http_status(:forbidden) }
+
+  end
+
+  describe "#POST new_option" do
+
+    let(:attributes) { { site_handle: site, slug: content_type.slug, name: field.name, select_option: 'Sales' } }
+
+    subject { post :new_option, params: attributes }
+
+    context 'options_editable is true (default)' do
+      it { is_expected.to be_successful }
+    end
+
+    context 'options_editable is false' do
+      before { field.update_attributes(options_editable: false) }
+      it { is_expected.to have_http_status(:forbidden) }
+    end
+
+  end
+  
 end
